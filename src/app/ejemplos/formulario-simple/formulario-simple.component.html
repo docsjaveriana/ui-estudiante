@@ -1,0 +1,23 @@
+<h2>Nuevo estudiante · ejemplo simple</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()">
+  <label>
+    Nombre
+    <input formControlName="nombre">
+  </label>
+  @if (form.controls.nombre.touched && form.controls.nombre.invalid) {
+    <small class="error">El nombre es obligatorio</small>
+  }
+
+  <label>
+    Correo
+    <input formControlName="correo">
+  </label>
+  @if (form.controls.correo.touched && form.controls.correo.invalid) {
+    <small class="error">Escribe un correo válido</small>
+  }
+
+  <button type="submit">Guardar</button>
+</form>
+
+<p>{{ mensaje() }}</p>

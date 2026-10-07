@@ -1,20 +1,38 @@
+<!-- Título: editing() es un signal computed; cambia según haya o no :id en la URL. -->
 <h2>{{ editing() ? 'Editar estudiante' : 'Nuevo estudiante' }}</h2>
 
+<!-- Mientras se carga el estudiante a editar, no se muestra el formulario. -->
 @if (loading()) {
   <p>Cargando…</p>
 } @else {
+  <!--
+    [formGroup]="form"  → une este <form> con el FormGroup «form» de la clase.
+    (ngSubmit)="submit()" → al enviar (botón submit o Enter) llama a submit() SIN recargar la página.
+    novalidate          → apaga la validación del navegador: valida Angular, con nuestros mensajes.
+  -->
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+    <!-- ===== Campo nombre ===== -->
     <label>
       Nombre
+      <!-- formControlName="nombre" → une este input con form.controls.nombre (lee y escribe su valor). -->
       <input formControlName="nombre" autocomplete="name">
     </label>
+    <!--
+      Componente hijo que muestra el error del campo:
+      [control]     → qué control revisar (su estado touched / errors)
+      [messages]    → texto para cada validador que falle (claves: required, maxlength)
+      [serverError] → error que devolvió el backend para este campo en un 400
+    -->
     <app-field-error
       [control]="form.controls.nombre"
       [messages]="{ required: 'El nombre es obligatorio', maxlength: 'Máximo 120 caracteres' }"
       [serverError]="fieldErrors()['nombre']" />
 
+    <!-- ===== Campo correo ===== -->
     <label>
       Correo
+      <!-- type="email" muestra el teclado de correo en el celular; la regla real es Validators.email. -->
       <input type="email" formControlName="correo" autocomplete="email" placeholder="nombre@javeriana.edu.co">
     </label>
     <app-field-error
@@ -22,14 +40,17 @@
       [messages]="{ required: 'El correo es obligatorio', email: 'El correo no tiene un formato válido' }"
       [serverError]="fieldErrors()['correo']" />
 
+    <!-- Mensaje general (409 correo repetido, 500, sin conexión). role="alert" lo anuncia el lector de pantalla. -->
     @if (message()) {
       <p class="error" role="alert">{{ message() }}</p>
     }
 
     <div class="acciones">
+      <!-- type="submit" dispara (ngSubmit). [disabled] evita doble envío mientras saving() es true. -->
       <button type="submit" [disabled]="saving()">
         {{ saving() ? 'Guardando…' : 'Guardar' }}
       </button>
+      <!-- routerLink navega dentro de la SPA sin recargar (nunca href). -->
       <a routerLink="/usuarios">Cancelar</a>
     </div>
   </form>

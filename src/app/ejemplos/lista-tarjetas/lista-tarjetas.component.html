@@ -1,0 +1,11 @@
+<h2>Estudiantes · ejemplo de componentes</h2>
+
+@if (elegido(); as u) {
+  <p>Seleccionaste a <b>{{ u.nombre }}</b></p>
+}
+
+<div class="tarjetas">
+  @for (u of usuarios(); track u.id) {
+    <app-tarjeta-usuario [usuario]="u" (seleccionar)="elegido.set($event)" />
+  }
+</div>

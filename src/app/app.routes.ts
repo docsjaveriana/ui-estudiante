@@ -6,5 +6,15 @@ export const routes: Routes = [
   { path: '', redirectTo: 'clases', pathMatch: 'full' },
   { path: 'clases', loadChildren: () => import('./clases/clases.routes').then(m => m.CLASES_ROUTES) },
   { path: 'usuarios', loadChildren: () => import('./usuarios/usuarios.routes').then(m => m.USUARIOS_ROUTES) },
+  {
+    path: 'ejemplos/formulario',
+    title: 'Ejemplo: formulario',
+    loadComponent: () => import('./ejemplos/formulario-simple/formulario-simple.component').then(m => m.FormularioSimpleComponent)
+  },
+  {
+    path: 'ejemplos/componentes',
+    title: 'Ejemplo: componentes',
+    loadComponent: () => import('./ejemplos/lista-tarjetas/lista-tarjetas.component').then(m => m.ListaTarjetasComponent)
+  },
   { path: '**', component: NotFoundComponent, title: 'Página no encontrada' }
 ];

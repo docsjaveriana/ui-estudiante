@@ -72,3 +72,9 @@ button.enlace.peligro { color: #b91c1c; }
 @media (max-width: 640px) {
   table { display: block; overflow-x: auto; }
 }
+
+/* Ejemplo de componentes */
+.tarjetas { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+.tarjeta { display: flex; flex-direction: column; gap: 0.25rem; padding: 1rem; background: #fff; border: 1px solid #e5e7eb; border-radius: 0.5rem; }
+.tarjeta h3, .tarjeta p { margin: 0; }
+.tarjeta button { align-self: flex-start; margin-top: 0.5rem; }

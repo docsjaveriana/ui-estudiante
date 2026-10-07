@@ -1,0 +1,5 @@
+<article class="tarjeta">
+  <h3>{{ usuario().nombre }}</h3>
+  <p>{{ usuario().correo }}</p>
+  <button type="button" (click)="seleccionar.emit(usuario())">Seleccionar</button>
+</article>

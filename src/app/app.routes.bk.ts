@@ -24,6 +24,8 @@
 import { Routes } from '@angular/router';
 import { ClaseFormComponent } from './clases/clase-form/clase-form.component';
 import { ClaseListComponent } from './clases/clase-list/clase-list.component';
+import { FormularioSimpleComponent } from './ejemplos/formulario-simple/formulario-simple.component';
+import { ListaTarjetasComponent } from './ejemplos/lista-tarjetas/lista-tarjetas.component';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { UsuarioDetailComponent } from './usuarios/usuario-detail/usuario-detail.component';
 import { UsuarioFormComponent } from './usuarios/usuario-form/usuario-form.component';
@@ -62,6 +64,13 @@ export const routes: Routes = [
   // /usuarios/7/editar     → el mismo formulario de crear, ahora en modo edición
   { path: 'usuarios/:id/editar', component: UsuarioFormComponent, title: 'Editar estudiante' },
 
+  // ---------- Ejemplos de clase ----------
+
+  // /ejemplos/formulario   → formulario mínimo con FormGroup y FormControl
+  { path: 'ejemplos/formulario', component: FormularioSimpleComponent, title: 'Ejemplo: formulario' },
+
+  // /ejemplos/componentes  → un componente padre que usa un componente hijo (tarjeta)
+  { path: 'ejemplos/componentes', component: ListaTarjetasComponent, title: 'Ejemplo: componentes' },
 
   // ---------- Ruta comodín ----------
 
