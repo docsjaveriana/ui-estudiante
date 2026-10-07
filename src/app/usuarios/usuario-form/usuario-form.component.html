@@ -1,0 +1,36 @@
+<h2>{{ editing() ? 'Editar estudiante' : 'Nuevo estudiante' }}</h2>
+
+@if (loading()) {
+  <p>Cargando…</p>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <label>
+      Nombre
+      <input formControlName="nombre" autocomplete="name">
+    </label>
+    <app-field-error
+      [control]="form.controls.nombre"
+      [messages]="{ required: 'El nombre es obligatorio', maxlength: 'Máximo 120 caracteres' }"
+      [serverError]="fieldErrors()['nombre']" />
+
+    <label>
+      Correo
+      <input type="email" formControlName="correo" autocomplete="email" placeholder="nombre@javeriana.edu.co">
+    </label>
+    <app-field-error
+      [control]="form.controls.correo"
+      [messages]="{ required: 'El correo es obligatorio', email: 'El correo no tiene un formato válido' }"
+      [serverError]="fieldErrors()['correo']" />
+
+    @if (message()) {
+      <p class="error" role="alert">{{ message() }}</p>
+    }
+
+    <div class="acciones">
+      <button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Guardando…' : 'Guardar' }}
+      </button>
+      <a routerLink="/usuarios">Cancelar</a>
+    </div>
+  </form>
+}

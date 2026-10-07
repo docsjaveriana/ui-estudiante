@@ -1,0 +1,59 @@
+<div class="encabezado">
+  <h2>Cursos</h2>
+  <a class="boton" routerLink="nueva" [queryParams]="{ usuarioId: usuarioId() }">+ Nuevo curso</a>
+</div>
+
+<label class="filtro">
+  Estudiante
+  <select (change)="filtrar($any($event.target).value)">
+    <option value="" [selected]="!usuarioId()">Todos</option>
+    @for (u of usuarios(); track u.id) {
+      <option [value]="u.id" [selected]="u.id === +(usuarioId() ?? 0)">{{ u.nombre }}</option>
+    }
+  </select>
+</label>
+
+@if (actionError()) {
+  <p class="error" role="alert">{{ actionError() }}</p>
+}
+
+@switch (status()) {
+  @case ('loading') {
+    <p>Cargando cursos…</p>
+  }
+  @case ('error') {
+    <p class="error" role="alert">{{ message() }}</p>
+    <button type="button" (click)="reload()">Reintentar</button>
+  }
+  @case ('success') {
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Código</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Créditos</th>
+          <th scope="col">Semestre</th>
+          <th scope="col">Estudiante</th>
+          <th scope="col"><span class="sr-only">Acciones</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of clases(); track c.id) {
+          <tr>
+            <td>{{ c.codigo }}</td>
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.creditos }}</td>
+            <td>{{ c.semestre || '—' }}</td>
+            <td><a [routerLink]="['/usuarios', c.usuarioId]">{{ nombres().get(c.usuarioId) ?? '#' + c.usuarioId }}</a></td>
+            <td class="acciones-fila">
+              <a [routerLink]="[c.id, 'editar']">Editar</a>
+              <button type="button" class="enlace peligro" (click)="remove(c)">Eliminar</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6">No hay cursos registrados.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+}

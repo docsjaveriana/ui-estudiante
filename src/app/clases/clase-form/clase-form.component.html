@@ -1,0 +1,67 @@
+<h2>{{ editing() ? 'Editar curso' : 'Nuevo curso' }}</h2>
+
+@if (loading()) {
+  <p>Cargando…</p>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <label>
+      Estudiante
+      <select formControlName="usuarioId">
+        <option [ngValue]="null" disabled>Selecciona un estudiante</option>
+        @for (u of usuarios(); track u.id) {
+          <option [ngValue]="u.id">{{ u.nombre }} · {{ u.correo }}</option>
+        }
+      </select>
+    </label>
+    <app-field-error
+      [control]="form.controls.usuarioId"
+      [messages]="{ required: 'Selecciona un estudiante' }"
+      [serverError]="fieldErrors()['usuarioId']" />
+    @if (usuarios().length === 0) {
+      <small>No hay estudiantes. <a routerLink="/usuarios/nuevo">Crea uno primero</a>.</small>
+    }
+
+    <label>
+      Código
+      <input formControlName="codigo" placeholder="DW-101">
+    </label>
+    <app-field-error
+      [control]="form.controls.codigo"
+      [messages]="{ required: 'El código es obligatorio' }"
+      [serverError]="fieldErrors()['codigo']" />
+
+    <label>
+      Nombre
+      <input formControlName="nombre" placeholder="Desarrollo Web">
+    </label>
+    <app-field-error
+      [control]="form.controls.nombre"
+      [messages]="{ required: 'El nombre es obligatorio' }"
+      [serverError]="fieldErrors()['nombre']" />
+
+    <label>
+      Créditos
+      <input type="number" formControlName="creditos" min="1">
+    </label>
+    <app-field-error
+      [control]="form.controls.creditos"
+      [messages]="{ required: 'Los créditos son obligatorios', min: 'Los créditos deben ser mayores que cero' }"
+      [serverError]="fieldErrors()['creditos']" />
+
+    <label>
+      Semestre <span class="opcional">(opcional)</span>
+      <input formControlName="semestre" placeholder="2026-2">
+    </label>
+
+    @if (message()) {
+      <p class="error" role="alert">{{ message() }}</p>
+    }
+
+    <div class="acciones">
+      <button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Guardando…' : 'Guardar' }}
+      </button>
+      <a routerLink="/clases">Cancelar</a>
+    </div>
+  </form>
+}

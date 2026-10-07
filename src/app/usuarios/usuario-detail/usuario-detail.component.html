@@ -1,0 +1,50 @@
+@switch (status()) {
+  @case ('loading') {
+    <p>Cargando estudiante…</p>
+  }
+  @case ('error') {
+    <p class="error" role="alert">{{ message() }}</p>
+    <a routerLink="/usuarios">Volver a estudiantes</a>
+  }
+  @case ('success') {
+    @if (usuario(); as u) {
+      <div class="encabezado">
+        <div>
+          <h2>{{ u.nombre }}</h2>
+          <p class="secundario">{{ u.correo }}</p>
+        </div>
+        <a [routerLink]="['/usuarios', u.id, 'editar']">Editar</a>
+      </div>
+
+      <div class="encabezado">
+        <h3>Cursos ({{ clases().length }} · {{ totalCreditos() }} créditos)</h3>
+        <a class="boton" routerLink="/clases/nueva" [queryParams]="{ usuarioId: u.id }">+ Agregar curso</a>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Créditos</th>
+            <th scope="col">Semestre</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of clases(); track c.id) {
+            <tr>
+              <td>{{ c.codigo }}</td>
+              <td>{{ c.nombre }}</td>
+              <td>{{ c.creditos }}</td>
+              <td>{{ c.semestre || '—' }}</td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4">Este estudiante no tiene cursos.</td></tr>
+          }
+        </tbody>
+      </table>
+
+      <p><a routerLink="/usuarios">← Volver a estudiantes</a></p>
+    }
+  }
+}
