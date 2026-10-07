@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.angular/
+.git/
+.github/
+.vscode/
+k8s/
+.env
+src/environments/environment.development.ts
+*.md

@@ -1,0 +1,105 @@
+# Frontend Angular publicado en https://desarrolloweb.click/estudiante/
+# Comparte el namespace del backend (y su ghcr-secret); la API sigue en /api/estudiante.
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: estudiante
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui-estudiante
+  namespace: estudiante
+  labels:
+    app: ui-estudiante
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ui-estudiante
+  template:
+    metadata:
+      labels:
+        app: ui-estudiante
+        environment: dev
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: ui-estudiante
+          image: ghcr.io/docsjaveriana/ui-estudiante:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /estudiante/
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /estudiante/
+              port: http
+            periodSeconds: 20
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "20m"
+              memory: "32Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui-estudiante
+  namespace: estudiante
+  labels:
+    app: ui-estudiante
+spec:
+  type: ClusterIP
+  selector:
+    app: ui-estudiante
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ui-estudiante
+  namespace: estudiante
+  annotations:
+    # nginx ya sirve todo bajo /estudiante (baseHref de Angular): sin reescritura.
+    # /estudiante es más específico que / (la documentación), así que tiene prioridad.
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+spec:
+  ingressClassName: public
+  rules:
+    - host: desarrolloweb.click
+      http:
+        paths:
+          - path: /estudiante
+            pathType: Prefix
+            backend:
+              service:
+                name: ui-estudiante
+                port:
+                  number: 80
+    - host: www.desarrolloweb.click
+      http:
+        paths:
+          - path: /estudiante
+            pathType: Prefix
+            backend:
+              service:
+                name: ui-estudiante
+                port:
+                  number: 80
